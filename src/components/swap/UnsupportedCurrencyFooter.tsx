@@ -40,7 +40,7 @@ const AddressText = styled(TYPE.blue)`
 
 export default function UnsupportedCurrencyFooter({
   show,
-  currencies
+  currencies,
 }: {
   show: boolean
   currencies: (Currency | undefined)[]
@@ -50,7 +50,7 @@ export default function UnsupportedCurrencyFooter({
 
   const tokens =
     chainId && currencies
-      ? currencies.map(currency => {
+      ? currencies.map((currency) => {
           return wrappedCurrency(currency, chainId)
         })
       : []
@@ -66,7 +66,7 @@ export default function UnsupportedCurrencyFooter({
               <TYPE.mediumHeader>Unsupported Assets</TYPE.mediumHeader>
               <CloseIcon onClick={() => setShowDetails(false)} />
             </RowBetween>
-            {tokens.map(token => {
+            {tokens.map((token) => {
               return (
                 token &&
                 unsupportedTokens &&

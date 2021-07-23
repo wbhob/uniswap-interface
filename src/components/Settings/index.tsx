@@ -10,7 +10,7 @@ import {
   useExpertModeManager,
   useUserTransactionTTL,
   useUserSlippageTolerance,
-  useUserSingleHopOnly
+  useUserSingleHopOnly,
 } from '../../state/user/hooks'
 import { TYPE } from '../../theme'
 import { ButtonError } from '../Button'
@@ -240,7 +240,7 @@ export default function SettingsTab() {
                 toggle={() => {
                   ReactGA.event({
                     category: 'Routing',
-                    action: singleHopOnly ? 'disable single hop' : 'enable single hop'
+                    action: singleHopOnly ? 'disable single hop' : 'enable single hop',
                   })
                   setSingleHopOnly(!singleHopOnly)
                 }}

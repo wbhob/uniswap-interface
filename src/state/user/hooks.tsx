@@ -18,7 +18,7 @@ import {
   updateUserExpertMode,
   updateUserSlippageTolerance,
   toggleURLWarning,
-  updateUserSingleHopOnly
+  updateUserSingleHopOnly,
 } from './actions'
 
 function serializeToken(token: Token): SerializedToken {
@@ -27,7 +27,7 @@ function serializeToken(token: Token): SerializedToken {
     address: token.address,
     decimals: token.decimals,
     symbol: token.symbol,
-    name: token.name
+    name: token.name,
   }
 }
 
@@ -48,7 +48,7 @@ export function useIsDarkMode(): boolean {
   >(
     ({ user: { matchesDarkMode, userDarkMode } }) => ({
       userDarkMode,
-      matchesDarkMode
+      matchesDarkMode,
     }),
     shallowEqual
   )
@@ -68,7 +68,7 @@ export function useDarkModeManager(): [boolean, () => void] {
 }
 
 export function useIsExpertMode(): boolean {
-  return useSelector<AppState, AppState['user']['userExpertMode']>(state => state.user.userExpertMode)
+  return useSelector<AppState, AppState['user']['userExpertMode']>((state) => state.user.userExpertMode)
 }
 
 export function useExpertModeManager(): [boolean, () => void] {
@@ -86,7 +86,7 @@ export function useUserSingleHopOnly(): [boolean, (newSingleHopOnly: boolean) =>
   const dispatch = useDispatch<AppDispatch>()
 
   const singleHopOnly = useSelector<AppState, AppState['user']['userSingleHopOnly']>(
-    state => state.user.userSingleHopOnly
+    (state) => state.user.userSingleHopOnly
   )
 
   const setSingleHopOnly = useCallback(
@@ -101,7 +101,7 @@ export function useUserSingleHopOnly(): [boolean, (newSingleHopOnly: boolean) =>
 
 export function useUserSlippageTolerance(): [number, (slippage: number) => void] {
   const dispatch = useDispatch<AppDispatch>()
-  const userSlippageTolerance = useSelector<AppState, AppState['user']['userSlippageTolerance']>(state => {
+  const userSlippageTolerance = useSelector<AppState, AppState['user']['userSlippageTolerance']>((state) => {
     return state.user.userSlippageTolerance
   })
 
@@ -117,7 +117,7 @@ export function useUserSlippageTolerance(): [number, (slippage: number) => void]
 
 export function useUserTransactionTTL(): [number, (slippage: number) => void] {
   const dispatch = useDispatch<AppDispatch>()
-  const userDeadline = useSelector<AppState, AppState['user']['userDeadline']>(state => {
+  const userDeadline = useSelector<AppState, AppState['user']['userDeadline']>((state) => {
     return state.user.userDeadline
   })
 
@@ -164,7 +164,7 @@ export function useUserAddedTokens(): Token[] {
 function serializePair(pair: Pair): SerializedPair {
   return {
     token0: serializeToken(pair.token0),
-    token1: serializeToken(pair.token1)
+    token1: serializeToken(pair.token1),
   }
 }
 
@@ -211,14 +211,14 @@ export function useTrackedTokenPairs(): [Token, Token][] {
   const generatedPairs: [Token, Token][] = useMemo(
     () =>
       chainId
-        ? flatMap(Object.keys(tokens), tokenAddress => {
+        ? flatMap(Object.keys(tokens), (tokenAddress) => {
             const token = tokens[tokenAddress]
             // for each token on the current chain,
             return (
               // loop though all bases on the current chain
               (BASES_TO_TRACK_LIQUIDITY_FOR[chainId] ?? [])
                 // to construct pairs of the given token with each base
-                .map(base => {
+                .map((base) => {
                   if (base.address === token.address) {
                     return null
                   } else {
@@ -240,16 +240,15 @@ export function useTrackedTokenPairs(): [Token, Token][] {
     const forChain = savedSerializedPairs[chainId]
     if (!forChain) return []
 
-    return Object.keys(forChain).map(pairId => {
+    return Object.keys(forChain).map((pairId) => {
       return [deserializeToken(forChain[pairId].token0), deserializeToken(forChain[pairId].token1)]
     })
   }, [savedSerializedPairs, chainId])
 
-  const combinedList = useMemo(() => userPairs.concat(generatedPairs).concat(pinnedPairs), [
-    generatedPairs,
-    pinnedPairs,
-    userPairs
-  ])
+  const combinedList = useMemo(
+    () => userPairs.concat(generatedPairs).concat(pinnedPairs),
+    [generatedPairs, pinnedPairs, userPairs]
+  )
 
   return useMemo(() => {
     // dedupes pairs of tokens in the combined list
@@ -261,6 +260,6 @@ export function useTrackedTokenPairs(): [Token, Token][] {
       return memo
     }, {})
 
-    return Object.keys(keyed).map(key => keyed[key])
+    return Object.keys(keyed).map((key) => keyed[key])
   }, [combinedList])
 }

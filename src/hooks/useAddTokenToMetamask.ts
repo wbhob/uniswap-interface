@@ -4,9 +4,10 @@ import { Currency, Token } from '@uniswap/sdk'
 import { useCallback, useState } from 'react'
 import { useActiveWeb3React } from 'hooks'
 
-export default function useAddTokenToMetamask(
-  currencyToAdd: Currency | undefined
-): { addToken: () => void; success: boolean | undefined } {
+export default function useAddTokenToMetamask(currencyToAdd: Currency | undefined): {
+  addToken: () => void
+  success: boolean | undefined
+} {
   const { library, chainId } = useActiveWeb3React()
 
   const token: Token | undefined = wrappedCurrency(currencyToAdd, chainId)
@@ -26,11 +27,11 @@ export default function useAddTokenToMetamask(
               address: token.address,
               symbol: token.symbol,
               decimals: token.decimals,
-              image: getTokenLogoURL(token.address)
-            }
-          }
+              image: getTokenLogoURL(token.address),
+            },
+          },
         })
-        .then(success => {
+        .then((success) => {
           setSuccess(success)
         })
         .catch(() => setSuccess(false))

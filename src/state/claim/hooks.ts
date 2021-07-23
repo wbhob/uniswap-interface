@@ -33,12 +33,12 @@ function fetchClaim(account: string, chainId: ChainId): Promise<UserClaimData | 
       body: JSON.stringify({ chainId, address: formatted }),
       headers: {
         'Content-Type': 'application/json',
-        'Referrer-Policy': 'no-referrer'
+        'Referrer-Policy': 'no-referrer',
       },
-      method: 'POST'
+      method: 'POST',
     })
-      .then(res => (res.ok ? res.json() : console.log(`No claim for account ${formatted} on chain ID ${chainId}`)))
-      .catch(error => console.error('Failed to get claim data', error)))
+      .then((res) => (res.ok ? res.json() : console.log(`No claim for account ${formatted} on chain ID ${chainId}`)))
+      .catch((error) => console.error('Failed to get claim data', error)))
 }
 
 // parse distributorContract blob and detect if user has claim data
@@ -51,11 +51,11 @@ export function useUserClaimData(account: string | null | undefined): UserClaimD
 
   useEffect(() => {
     if (!account || !chainId) return
-    fetchClaim(account, chainId).then(accountClaimInfo =>
-      setClaimInfo(claimInfo => {
+    fetchClaim(account, chainId).then((accountClaimInfo) =>
+      setClaimInfo((claimInfo) => {
         return {
           ...claimInfo,
-          [key]: accountClaimInfo
+          [key]: accountClaimInfo,
         }
       })
     )
@@ -86,9 +86,7 @@ export function useUserUnclaimedAmount(account: string | null | undefined): Toke
   return new TokenAmount(uni, JSBI.BigInt(userClaimData.amount))
 }
 
-export function useClaimCallback(
-  account: string | null | undefined
-): {
+export function useClaimCallback(account: string | null | undefined): {
   claimCallback: () => Promise<string>
 } {
   // get claim data for this account
@@ -100,18 +98,18 @@ export function useClaimCallback(
   const addTransaction = useTransactionAdder()
   const distributorContract = useMerkleDistributorContract()
 
-  const claimCallback = async function() {
+  const claimCallback = async function () {
     if (!claimData || !account || !library || !chainId || !distributorContract) return
 
     const args = [claimData.index, account, claimData.amount, claimData.proof]
 
-    return distributorContract.estimateGas['claim'](...args, {}).then(estimatedGasLimit => {
+    return distributorContract.estimateGas['claim'](...args, {}).then((estimatedGasLimit) => {
       return distributorContract
         .claim(...args, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
         .then((response: TransactionResponse) => {
           addTransaction(response, {
             summary: `Claimed ${unClaimedAmount?.toSignificant(4)} UNI`,
-            claim: { recipient: account }
+            claim: { recipient: account },
           })
           return response.hash
         })
