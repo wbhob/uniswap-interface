@@ -1,16 +1,6 @@
+import { t } from '@lingui/macro'
 import React, { useEffect, useRef, useState } from 'react'
-import {
-  BookOpen,
-  Code,
-  Info,
-  MessageCircle,
-  PieChart,
-  Moon,
-  Sun,
-  ChevronRight,
-  ChevronLeft,
-  Check,
-} from 'react-feather'
+import { BookOpen, Code, Info, MessageCircle, PieChart, Moon, Sun, Globe, ChevronLeft, Check } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled, { css } from 'styled-components/macro'
 import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
@@ -229,7 +219,7 @@ export default function Menu() {
   return (
     // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451
     <StyledMenu ref={node as any}>
-      <StyledMenuButton onClick={toggle}>
+      <StyledMenuButton onClick={toggle} aria-label={t`Menu`}>
         <StyledMenuIcon />
       </StyledMenuButton>
 
@@ -276,7 +266,7 @@ export default function Menu() {
                     <div>
                       <Trans>Language</Trans>
                     </div>
-                    <ChevronRight size={16} opacity={0.6} />
+                    <Globe opacity={0.6} size={16} />
                   </ToggleMenuItem>
                   <ToggleMenuItem onClick={() => toggleDarkMode()}>
                     <div>{darkMode ? <Trans>Light Theme</Trans> : <Trans>Dark Theme</Trans>}</div>
@@ -337,11 +327,11 @@ export const NewMenu = ({ flyoutAlignment = FlyoutAlignment.RIGHT, ToggleUI, men
         <NewMenuFlyout flyoutAlignment={flyoutAlignment}>
           {menuItems.map(({ content, link, external }, i) =>
             external ? (
-              <ExternalMenuItem id="link" href={link} key={link + i}>
+              <ExternalMenuItem href={link} key={i}>
                 {content}
               </ExternalMenuItem>
             ) : (
-              <NewMenuItem id="link" to={link} key={link + i}>
+              <NewMenuItem to={link} key={i}>
                 {content}
               </NewMenuItem>
             )
